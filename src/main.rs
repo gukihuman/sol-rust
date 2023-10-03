@@ -1,4 +1,4 @@
-use sol_rust::*;
+use sol_rust::prelude::*;
 use bevy::{prelude::*, input::common_conditions::input_toggle_active};
 use bevy::window::*;
 use bevy_screen_diagnostics::{
@@ -30,8 +30,7 @@ fn main() {
                     input_toggle_active(true, KeyCode::N)
                 )
         )
-        .add_plugins(camera::CameraPlugin)
-        .add_systems(Startup, dev_mode::crosshair::spawn)
-        .add_systems(Startup, dev_mode::grid::spawn)
+        .add_plugins(BootPlugins)
+        .add_plugins(DevModePlugin) // turn off for release
         .run();
 }
