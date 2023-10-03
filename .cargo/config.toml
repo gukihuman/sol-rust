@@ -1,4 +1,7 @@
-# Add the contents of this file to `config.toml` to enable "fast build" configuration. Please read the notes below.
+[build]
+# number of parallel jobs, defaults to # of CPUs
+# set to 1 for long build times to prevent freezing for other usage
+# jobs = 1
 
 # NOTE: For maximum performance, build using a nightly compiler
 # If you are using rust stable, remove the "-Zshare-generics=y" below.
@@ -31,7 +34,3 @@ rustflags = ["-Zshare-generics=n"]
 # In most cases the gains are negligible, but if you are on macos and have slow compile times you should see significant gains.
 #[profile.dev]
 #debug = 1
-
-[build]
-# number of parallel jobs, defaults to # of CPUs
-jobs = 2

@@ -1,42 +1,37 @@
-use bevy::prelude::*;
-#[derive(Component)]
-struct Name(String);
-#[derive(Component)]
-struct Person;
-#[derive(Resource)]
-struct GreetTimer(Timer);
-pub struct HelloPlugin;
-impl Plugin for HelloPlugin {
-    fn build(&self, app: &mut App) {
-        app.insert_resource(
-            GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating))
-        )
-            .add_systems(Startup, add_people)
-            .add_systems(Update, greet_people);
-    }
-}
-fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("Elaina Proctor".to_string())));
-    commands.spawn((Person, Name("Renzo Hume".to_string())));
-    commands.spawn((Person, Name("Zayna Nieves".to_string())));
-}
-fn greet_people(
-    time: Res<Time>,
-    mut timer: ResMut<GreetTimer>,
-    query: Query<&Name, With<Person>>
-) {
-    // update our timer with the time elapsed since the last update
-    // if that caused the timer to finish, we say hello to everyone
-    if timer.0.tick(time.delta()).just_finished() {
-        for name in &query {
-            println!("hello {}!", name.0);
-        }
-    }
-}
+use sol_rust::*;
+use bevy::{prelude::*, input::common_conditions::input_toggle_active};
+use bevy::window::*;
+use bevy_screen_diagnostics::{
+    ScreenDiagnosticsPlugin, ScreenFrameDiagnosticsPlugin
+};
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
+
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, HelloPlugin))
-        .add_systems(Startup, add_people)
-        .add_systems(Update, greet_people)
+        .add_plugins(DefaultPlugins
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    mode: WindowMode::Windowed,
+                    present_mode: PresentMode::Fifo,
+                    title: "Spirit of Lira".into(),
+                    resolution: (1280., 720.).into(),
+                    resizable: false,
+                    ..default()
+                }),
+                ..default()
+            })
+            .build(),
+        )
+        .add_plugins(ScreenDiagnosticsPlugin::default())
+        .add_plugins(ScreenFrameDiagnosticsPlugin)
+        .add_plugins(
+            WorldInspectorPlugin::default()
+                .run_if(
+                    input_toggle_active(true, KeyCode::N)
+                )
+        )
+        .add_plugins(camera::CameraPlugin)
+        .add_systems(Startup, dev_mode::crosshair::spawn)
+        .add_systems(Startup, dev_mode::grid::spawn)
         .run();
 }
