@@ -1,24 +1,12 @@
 use bevy::prelude::*;
-use crate::collision::CollisionArray;
+use crate::resources::collision::CollisionArray;
 
-#[derive(Resource)]
-pub struct GridCreated {
-    ran: bool,
-}
-
-
-pub fn setup(mut commands: Commands) {
-    commands.insert_resource(GridCreated{ ran: false });
-}
+const Z_INDEX: f32 = 20.;
 
 pub fn spawn(
     mut commands: Commands,
-    mut state: ResMut<GridCreated>,
     collision_array: Res<CollisionArray>
 ) {
-    if state.ran { return; }
-    state.ran = true;
-    
     let square_size = 32.0;
     let gap = 2.0;
     let grid_size = 10;
@@ -27,7 +15,7 @@ pub fn spawn(
             let position = Vec3::new(
                 x as f32 * (square_size + gap), 
                 y as f32 * (square_size + gap), 
-                0.0
+                Z_INDEX
             );
             let color = match collision_array.get(y, x) {
                 Some(&0) => Color::rgb(1.0, 0.5, 0.5), // FreeToMove

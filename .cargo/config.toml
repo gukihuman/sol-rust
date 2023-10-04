@@ -1,7 +1,7 @@
 [build]
 # number of parallel jobs, defaults to # of CPUs
 # set to 1 for long build times to prevent freezing for other usage
-jobs = 1
+# jobs = 1
 
 # NOTE: For maximum performance, build using a nightly compiler
 # If you are using rust stable, remove the "-Zshare-generics=y" below.
