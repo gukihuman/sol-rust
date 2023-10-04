@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::resources::collision::CollisionArray;
+use crate::core::collision::CollisionArray;
 
 const Z_INDEX: f32 = 20.;
 

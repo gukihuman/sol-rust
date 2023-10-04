@@ -1,4 +1,4 @@
-use sol_rust::prelude::*;
+use sol_rust::*;
 use bevy::prelude::*;
 use bevy::window::*;
 
@@ -19,6 +19,6 @@ fn main() {
             .build(),
         )
         .add_plugins(BootPlugin)
-        .add_plugins(DevModePlugin) // turn off for release
+        .add_plugins(dev_mode::DevModePlugin)
         .run();
 }
