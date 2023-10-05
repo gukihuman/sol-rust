@@ -2,6 +2,8 @@ use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use crate::motion::movement::Movement;
 use crate::core::camera::CameraFollowedEntity;
+use crate::motion::destination::ControlledEntity;
+
 
 const Z_INDEX: f32 = 30.;
 
@@ -9,7 +11,8 @@ pub fn startup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut followed_entity: ResMut<CameraFollowedEntity>
+    mut followed_entity: ResMut<CameraFollowedEntity>,
+    mut controlled_entity: ResMut<ControlledEntity>,
 ) {
     let crosshair = commands.spawn((
         MaterialMesh2dBundle {
@@ -21,4 +24,5 @@ pub fn startup(
         Movement::default()
     )).id();
     followed_entity.0 = Some(crosshair);
+    controlled_entity.0 = Some(crosshair);
 }

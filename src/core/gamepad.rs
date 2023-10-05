@@ -2,9 +2,11 @@ use bevy::prelude::*;
 use bevy::input::gamepad::{GamepadEvent, GamepadAxisType};
 
 
-#[derive(Resource)]
+#[derive(Resource, Debug)]
 pub struct GamepadState {
     pub deadzone: f32,
+    pub left_stick_deadzone_exceed: bool,
+    pub right_stick_deadzone_exceed: bool,
     pub left_stick_x: f32,
     pub left_stick_y: f32,
     pub right_stick_x: f32,
@@ -13,7 +15,9 @@ pub struct GamepadState {
 impl Default for GamepadState {
     fn default() -> Self {
         Self {
-            deadzone: 0.15,
+            deadzone: 0.1,
+            left_stick_deadzone_exceed: false,
+            right_stick_deadzone_exceed: false,
             left_stick_x: 0.,
             left_stick_y: 0.,
             right_stick_x: 0.,
@@ -27,16 +31,43 @@ pub fn update(
 ) {
     for event in gamepad_event_reader.iter() {
         if let GamepadEvent::Axis(axis_event) = event {
-            let value =
-                if axis_event.value.abs() < gamepad_state.deadzone { 0.0 }
-                else { axis_event.value };
             match axis_event.axis_type {
-                GamepadAxisType::LeftStickX => gamepad_state.left_stick_x = value,
-                GamepadAxisType::LeftStickY => gamepad_state.left_stick_y = value,
-                GamepadAxisType::RightStickX => gamepad_state.right_stick_x = value,
-                GamepadAxisType::RightStickY => gamepad_state.right_stick_y = value,
+                GamepadAxisType::LeftStickX => {
+                    gamepad_state.left_stick_deadzone_exceed = true;
+                    gamepad_state.left_stick_x = axis_event.value
+                },
+                GamepadAxisType::LeftStickY => {
+                    gamepad_state.left_stick_deadzone_exceed = true;
+                    gamepad_state.left_stick_y = axis_event.value
+                },
+                GamepadAxisType::RightStickX => {
+                    gamepad_state.right_stick_deadzone_exceed = true;
+                    gamepad_state.right_stick_x = axis_event.value
+                },
+                GamepadAxisType::RightStickY => {
+                    gamepad_state.right_stick_deadzone_exceed = true;
+                    gamepad_state.right_stick_y = axis_event.value
+                },
                 _ => {},
             }
         }
+    }
+    
+    let left_stick_magnitude = (
+        gamepad_state.left_stick_x.powi(2) + gamepad_state.left_stick_y.powi(2)
+    ).sqrt();
+    let right_stick_magnitude = (
+        gamepad_state.right_stick_x.powi(2) + gamepad_state.right_stick_y.powi(2)
+    ).sqrt();
+    
+    if left_stick_magnitude < gamepad_state.deadzone {
+        gamepad_state.left_stick_deadzone_exceed = false;
+        gamepad_state.left_stick_x = 0.0;
+        gamepad_state.left_stick_y = 0.0;
+    }
+    if right_stick_magnitude < gamepad_state.deadzone {
+        gamepad_state.right_stick_deadzone_exceed = false;
+        gamepad_state.right_stick_x = 0.0;
+        gamepad_state.right_stick_y = 0.0;
     }
 }

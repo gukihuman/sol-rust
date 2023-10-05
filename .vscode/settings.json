@@ -1,3 +1,28 @@
 {
-  "rust-analyzer.showUnlinkedFileNotification": false
+  "folder-path-color.folders": [
+    {
+      "path": "src/core",
+      "color": "blue"
+    },
+    {
+      "path": "src/dev_mode",
+      "color": "magenta"
+    },
+    {
+      "path": "src/motion",
+      "color": "red"
+    },
+    {
+      "path": "modules",
+      "color": "cyan"
+    },
+    {
+      "path": "something",
+      "color": "green"
+    },
+    {
+      "path": "something",
+      "color": "yellow"
+    }
+  ]
 }
