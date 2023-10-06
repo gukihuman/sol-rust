@@ -1,7 +1,8 @@
-[build]
-# number of parallel jobs, defaults to # of CPUs
-# set to 1 for long build times to prevent freezing for other usage
-# jobs = 1
+[alias]
+# j1 (job-1) sets processor's core usage to one to prevent freezing for other usage
+r = "run --features bevy/dynamic_linking"
+s = "run -j1 --features bevy/dynamic_linking"
+release = "build -j1 --release"
 
 # NOTE: For maximum performance, build using a nightly compiler
 # If you are using rust stable, remove the "-Zshare-generics=y" below.

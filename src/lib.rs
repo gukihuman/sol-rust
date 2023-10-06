@@ -2,6 +2,7 @@ use bevy::prelude::*;
 pub mod dev_mode;
 pub mod core;
 pub mod motion;
+pub mod boot;
 
 pub struct BootPlugin;
 impl Plugin for BootPlugin {
@@ -15,6 +16,8 @@ impl Plugin for BootPlugin {
             .insert_resource(motion::indicator::IndicatorEntity::default())
             .add_plugins(core::camera::CameraPlugin)
             .add_plugins(motion::MotionPlugin)
-            .add_systems(Update, core::gamepad::update);
+            .add_systems(Update, core::gamepad::update)
+            .add_systems(Startup, boot::convert::startup)
+            ;
     }
 }
