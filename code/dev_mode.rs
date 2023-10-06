@@ -9,6 +9,7 @@ use bevy_screen_diagnostics::{
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 pub mod crosshair;
 pub mod collision_grid;
+pub mod convert;
 
 pub struct DevModePlugin;
 impl Plugin for DevModePlugin {
@@ -23,6 +24,8 @@ impl Plugin for DevModePlugin {
                     )
             )
             .add_systems(Startup, crosshair::startup)
-            .add_systems(Startup, collision_grid::spawn);
+            .add_systems(Startup, collision_grid::spawn)
+            .add_systems(Startup, convert::startup)
+            ;
     }
 }

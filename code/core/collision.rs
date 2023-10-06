@@ -14,7 +14,7 @@ impl CollisionArray {
 }
 impl Default for CollisionArray {
     fn default() -> Self {
-        let path = Path::new("./data/collision.json");
+        let path = Path::new("./stones/collision.json");
         let collision_array = if path.exists() {
             // Load file
             let mut file = File::open(&path).unwrap();

@@ -24,5 +24,12 @@
       "path": "something",
       "color": "yellow"
     }
-  ]
+  ],
+  "files.exclude": {
+    ".cargo": true,
+    ".vscode": true,
+    "Cargo.lock": true,
+    "rust-toolchain.toml": true
+  },
+  "workspace.isHidden": true
 }

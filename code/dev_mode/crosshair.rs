@@ -6,6 +6,7 @@ use crate::motion::destination::ControlledEntity;
 
 
 const Z_INDEX: f32 = 30.;
+const RADIUS: f32 = 1.5;
 
 pub fn startup(
     mut commands: Commands,
@@ -16,7 +17,7 @@ pub fn startup(
 ) {
     let crosshair = commands.spawn((
         MaterialMesh2dBundle {
-            mesh: meshes.add(shape::Circle::new(2.).into()).into(),
+            mesh: meshes.add(shape::Circle::new(RADIUS).into()).into(),
             material: materials.add(ColorMaterial::from(Color::ALICE_BLUE)),
             transform: Transform::from_translation(Vec3::new(0., 0., Z_INDEX)),
             ..default()
