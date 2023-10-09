@@ -19,7 +19,15 @@ impl Plugin for CameraPlugin {
     }
 }
 pub fn startup (mut commands: Commands) {
-    let camera = commands.spawn(Camera2dBundle::default()).id();
+    // let camera = commands.spawn(Camera2dBundle::default()).id();
+    let camera = commands.spawn(Camera2dBundle {
+        projection: OrthographicProjection {
+            near: -1000.0,
+            far: 0.0,
+            ..Default::default()
+        },
+        ..Default::default()
+    }).id();
     commands.insert_resource(Camera(camera));
     commands.insert_resource(CameraZoom(ZOOM));
 }
@@ -40,9 +48,9 @@ pub fn zoom(
 
     camera_zoom.0 = camera_zoom.0.clamp(ZOOM_MIN, ZOOM_MAX);
     if let Ok(mut transform) = transforms.get_mut(camera.0) {
-        transform.scale = Vec3::splat(1.0) * camera_zoom.0;
+        transform.scale.x = camera_zoom.0;
+        transform.scale.y = camera_zoom.0;
     }
-
 }
 pub fn follow(
     camera: Res<Camera>,

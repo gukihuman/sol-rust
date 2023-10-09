@@ -5,7 +5,7 @@
       "color": "blue"
     },
     {
-      "path": "src/dev_mode",
+      "path": "scrolls",
       "color": "magenta"
     },
     {
@@ -13,7 +13,7 @@
       "color": "red"
     },
     {
-      "path": "modules",
+      "path": "code",
       "color": "cyan"
     },
     {
@@ -21,7 +21,7 @@
       "color": "green"
     },
     {
-      "path": "something",
+      "path": "stones",
       "color": "yellow"
     }
   ],

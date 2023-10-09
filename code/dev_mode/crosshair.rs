@@ -5,8 +5,8 @@ use crate::core::camera::CameraFollowedEntity;
 use crate::motion::destination::ControlledEntity;
 
 
-const Z_INDEX: f32 = 30.;
-const RADIUS: f32 = 1.5;
+const Z_INDEX: f32 = 999.;
+const RADIUS: f32 = 10.5;
 
 pub fn startup(
     mut commands: Commands,
