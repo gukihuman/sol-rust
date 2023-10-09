@@ -8,13 +8,15 @@ const ZOOM_SPEED: f32 = 1.;
 #[derive(Resource)] pub struct Camera(Entity);
 #[derive(Resource)] pub struct CameraZoom(f32);
 #[derive(Resource)] pub struct CameraFollowedEntity(pub Option<Entity>);
+#[derive(Component)] pub struct CameraFollow;
 impl Default for CameraFollowedEntity { fn default() -> Self { Self (None) } }
+
 pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, startup)
-            .add_systems(Update, (zoom, follow));
+            .add_systems(Update, zoom);
 
     }
 }
@@ -52,18 +54,24 @@ pub fn zoom(
         transform.scale.y = camera_zoom.0;
     }
 }
-pub fn follow(
-    camera: Res<Camera>,
-    mut transforms: Query<&mut Transform>,
-    followed_entity: Res<CameraFollowedEntity>
-) {
-    if let Some(entity_to_follow) = followed_entity.0 {
-        if let Ok(entity_transform) = transforms.get_component::<Transform>(entity_to_follow) {
-            let entity_position = entity_transform.translation;
-            if let Ok(mut camera_transform) = transforms.get_mut(camera.0) {
-                camera_transform.translation.x = entity_position.x;
-                camera_transform.translation.y = entity_position.y;
-            }
-        }
-    }
-}
+// pub fn follow(
+//     camera: Res<Camera>,
+//     mut transforms: Query<&mut Transform>,
+//     followed_entity: Res<CameraFollowedEntity>,
+//     // query: Query<(&Transform, With<CameraFollow>)>
+// ) {
+//     // for transform in query.iter() {
+//     //     println!("{:?}", transform);
+//     // }
+
+
+//     // if let Some(entity_to_follow) = followed_entity.0 {
+//     //     if let Ok(entity_transform) = transforms.get_component::<Transform>(entity_to_follow) {
+//     //         let entity_position = entity_transform.translation;
+//     //         if let Ok(mut camera_transform) = transforms.get_mut(camera.0) {
+//     //             camera_transform.translation.x = entity_position.x;
+//     //             camera_transform.translation.y = entity_position.y;
+//     //         }
+//     //     }
+//     // }
+// }
