@@ -1,10 +1,8 @@
+use crate::*;
 use bevy::prelude::*;
-pub mod dev_mode;
-pub mod core;
-pub mod motion;
 
-pub struct BootPlugin;
-impl Plugin for BootPlugin {
+pub struct StartBundlePlugins;
+impl Plugin for StartBundlePlugins {
     fn build(&self, app: &mut bevy::prelude::App) {
         app
             .insert_resource(core::collision::CollisionArray::default())

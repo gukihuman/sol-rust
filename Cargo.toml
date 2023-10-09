@@ -5,11 +5,11 @@ edition = "2021"
 build = "build.rs"
 
 [lib]
-path = "code/lib.rs"
+path = "code/library.rs"
 
 [[bin]]
 name = "sol-rust"
-path = "code/main.rs"
+path = "code/start.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]

@@ -2,6 +2,7 @@ use sol_rust::*;
 use bevy::prelude::*;
 use bevy::window::*;
 
+// manages default plugins and toggles dev mode
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins
@@ -10,7 +11,7 @@ fn main() {
                     mode: WindowMode::Windowed,
                     present_mode: PresentMode::Fifo,
                     title: "Spirit of Lira".into(),
-                    resolution: (1280., 720.).into(),
+                    resolution: (1280.0, 720.0).into(),
                     resizable: false,
                     ..default()
                 }),
@@ -18,7 +19,7 @@ fn main() {
             })
             .build(),
         )
-        .add_plugins(BootPlugin)
+        .add_plugins(start_bundle::StartBundlePlugins)
         .add_plugins(dev_mode::DevModePlugin)
         .run();
 }
