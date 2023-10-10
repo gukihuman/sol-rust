@@ -5,7 +5,7 @@ edition = "2021"
 build = "build.rs"
 
 [lib]
-path = "code/library.rs"
+path = "code/start_library.rs"
 
 [[bin]]
 name = "sol-rust"

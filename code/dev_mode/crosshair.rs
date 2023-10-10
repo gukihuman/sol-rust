@@ -7,7 +7,7 @@ pub fn startup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut followed_entity: ResMut<core::camera::CameraFollowedEntity>,
+    mut camera: ResMut<core::camera::Camera>,
     mut controlled_entity: ResMut<motion::destination::ControlledEntity>,
 ) {
     let crosshair = commands.spawn((
@@ -19,8 +19,7 @@ pub fn startup(
 
         },
         motion::movement::Movement::default(),
-        core::camera::CameraFollow
     )).id();
-    followed_entity.0 = Some(crosshair);
+    camera.followed_entity = Some(crosshair);
     controlled_entity.0 = Some(crosshair);
 }

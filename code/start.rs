@@ -7,7 +7,6 @@ use bevy::window::*;
 fn main() {
     #[cfg(target_os = "windows")] dotenv().ok(); // vulcan -> dx12
     App::new()
-        // .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
@@ -25,7 +24,5 @@ fn main() {
         )
         .add_plugins(start_bundle::StartBundlePlugins)
         .add_plugins(dev_mode::DevModePlugin)
-        
-    //    .run_non_blocking();
         .run();
 }

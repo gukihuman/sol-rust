@@ -1,6 +1,9 @@
 use bevy::{
     prelude::*,
-    input::common_conditions::input_toggle_active
+    input::common_conditions::{
+        input_just_pressed,
+        input_toggle_active
+    }
 };
 use bevy_screen_diagnostics::{
     ScreenDiagnosticsPlugin,
@@ -20,12 +23,19 @@ impl Plugin for DevModePlugin {
             .add_plugins(
                 WorldInspectorPlugin::default()
                     .run_if(
-                        input_toggle_active(true, KeyCode::N)
+                        input_toggle_active(false, KeyCode::N)
                     )
             )
-            .add_systems(Startup, crosshair::startup)
-            .add_systems(Startup, collision_grid::spawn)
-            .add_systems(Startup, convert::startup)
-            ;
+            .add_systems(Update,
+                (
+                    convert::startup,
+                    crosshair::startup,
+                    collision_grid::spawn
+                )
+                    .run_if(
+                        input_just_pressed(KeyCode::M)
+                    )
+            )
+        ;
     }
 }
