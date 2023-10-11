@@ -5,9 +5,8 @@ use std::path::Path;
 use sha2::{Digest, Sha256};
 use ico::{IconDir, IconDirEntry, IconImage, ResourceType};
 use serde_json::{json, Value};
-
 // 📜 adapt it to other files
-pub fn startup() {
+pub fn convert_assets() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let src_path = Path::new(&manifest_dir).join("whales/icon.png");
     let dst_path = Path::new("./assets/icon.ico");
@@ -19,14 +18,15 @@ pub fn startup() {
         }
     }
 }
-
 fn cache_check(src_path: &Path, cache_path: &Path)-> bool {
     let mut hasher = Sha256::new();
     let mut src = File::open(&src_path).expect("Failed to open icon.png");
     let _ = io::copy(&mut src, &mut hasher);
     let current_hash = format!("{:x}", hasher.finalize());
 
-    let cache: Value = serde_json::from_str(&fs::read_to_string(&cache_path).unwrap_or("{}".into())).unwrap();
+    let cache: Value = serde_json::from_str(
+        &fs::read_to_string(&cache_path).unwrap_or("{}".into())
+    ).unwrap();
     if let Some(previous_hash) = cache["hash"].as_str() {
         if previous_hash == current_hash {
             return true;
@@ -34,7 +34,6 @@ fn cache_check(src_path: &Path, cache_path: &Path)-> bool {
     }
     false
 }
-
 fn convert_icon(src_path: &Path, dst_path: &Path) -> bool {
     let img = image::open(&src_path).expect("Failed to open icon.png");
     let img = img.into_rgba8();
@@ -51,7 +50,14 @@ fn convert_icon(src_path: &Path, dst_path: &Path) -> bool {
 
     true
 }
-
+fn create_icon_image(
+    image: image::ImageBuffer<image::Rgba<u8>, Vec<u8>>
+) -> IconImage {
+    let width = image.width();
+    let height = image.height();
+    let data = image.into_raw();
+    IconImage::from_rgba_data(width, height, data)
+}
 fn update_cache(src_path: &Path, cache_path: &Path) {
     let mut hasher = Sha256::new();
     let mut src = File::open(&src_path).expect("Failed to open icon.png");
@@ -60,11 +66,4 @@ fn update_cache(src_path: &Path, cache_path: &Path) {
 
     let new_cache = json!({ "hash": current_hash });
     fs::write(&cache_path, new_cache.to_string()).expect("Failed to write cache file");
-}
-
-fn create_icon_image(image: image::ImageBuffer<image::Rgba<u8>, Vec<u8>>) -> IconImage {
-    let width = image.width();
-    let height = image.height();
-    let data = image.into_raw();
-    IconImage::from_rgba_data(width, height, data)
 }
