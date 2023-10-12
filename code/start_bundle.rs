@@ -1,31 +1,36 @@
 use crate::*;
 use bevy::prelude::*;
-
-#[derive(Event)] pub struct StartGameEvent();
-
+#[derive(States, PartialEq, Eq, Debug, Clone, Hash, Default)]
+pub enum AppState {
+    #[default]
+    MainMenu,
+    InGame,
+    Scene
+}
 pub struct StartBundlePlugins;
 impl Plugin for StartBundlePlugins {
     fn build(&self, app: &mut bevy::prelude::App) {
         app
+            .add_state::<AppState>()
             .insert_resource(core::collision::CollisionArray::default())
             .insert_resource(core::time::WorldTime::default())
             .insert_resource(core::gamepad::GamepadState::default())
-            .insert_resource(motion::destination::ControlledEntity::default())
+            .insert_resource(
+                motion::destination::ControlledEntity::default()
+            )
             .insert_resource(motion::indicator::IndicatorEntity::default())
             .add_plugins(core::camera::CameraPlugin)
             .add_plugins(motion::MotionPlugin)
             .add_systems(Update, core::gamepad::update)
-            .add_systems(Update, handle_start_game_event)
-            .add_event::<StartGameEvent>()
+            .add_systems(Update, start_game)
         ;
     }
 }
-
-fn handle_start_game_event(
+fn start_game(
     keys: Res<Input<KeyCode>>,
-    mut start_game_event: EventWriter<StartGameEvent>
-) {
+    mut next_state: ResMut<NextState<AppState>>,
+){
     if keys.just_pressed(KeyCode::M) {
-        start_game_event.send(StartGameEvent());
+        next_state.set(AppState::InGame);
     }
 }

@@ -25,13 +25,15 @@ impl Plugin for DevModePlugin {
                         input_toggle_active(false, KeyCode::N)
                     )
             )
-            .add_systems(Update, crosshair::startup.run_if(game_started))
-            .add_systems(Update, collision_grid::spawn.run_if(game_started))
+            // .add_systems(Update, crosshair::startup.run_if(game_started))
+            // .add_systems(Update, collision_grid::spawn.run_if(game_started))
+            .add_systems(
+                OnEnter(start_bundle::AppState::InGame),
+                (crosshair::startup, collision_grid::spawn)
+            )
         ;
     }
 }
-fn game_started(
-    mut start_game_event: EventReader<start_bundle::StartGameEvent>
-) -> bool {
-    start_game_event.iter().next().is_some()
-}
+// fn game_started(
+//     mut start_game_event: EventReader<start_bundle::StartGameEvent>
+// ) -> bool { start_game_event.iter().next().is_some() }

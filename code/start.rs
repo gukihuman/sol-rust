@@ -13,7 +13,7 @@ fn main() {
                     mode: WindowMode::BorderlessFullscreen,
                     present_mode: PresentMode::AutoVsync,
                     title: "Spirit of Lira".into(),
-                    resolution: (1280.0, 720.0).into(),
+                    resolution: (1920.0, 1080.0).into(),
                     resizable: false,
                     window_theme: Some(WindowTheme::Dark),
                     ..default()
