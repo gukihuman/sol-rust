@@ -1,14 +1,11 @@
 use bevy::prelude::*;
 use bevy::input::gamepad::{GamepadEvent, GamepadAxisType};
-
-
-#[derive(Resource, Debug)]
-pub struct GamepadState {
+#[derive(Resource, Debug)] pub struct GamepadState {
     pub deadzone: f32,
     pub left_stick_deadzone_exceed: bool,
-    pub right_stick_deadzone_exceed: bool,
     pub left_stick_x: f32,
     pub left_stick_y: f32,
+    pub right_stick_deadzone_exceed: bool,
     pub right_stick_x: f32,
     pub right_stick_y: f32,
 }
@@ -17,15 +14,15 @@ impl Default for GamepadState {
         Self {
             deadzone: 0.1,
             left_stick_deadzone_exceed: false,
-            right_stick_deadzone_exceed: false,
             left_stick_x: 0.,
             left_stick_y: 0.,
+            right_stick_deadzone_exceed: false,
             right_stick_x: 0.,
             right_stick_y: 0.,
         }
     }
 }
-pub fn update(
+pub fn update_gamepad_state(
     mut gamepad_state: ResMut<GamepadState>,
     mut gamepad_event_reader: EventReader<GamepadEvent>,
 ) {

@@ -8,14 +8,14 @@ use serde::{Deserialize, Serialize};
 pub struct CollisionArray(Vec<Vec<u8>>);
 
 impl CollisionArray {
-    pub fn get(&self, row: usize, col: usize) -> Option<&u8> {
+    pub fn get_tile(&self, row: usize, col: usize) -> Option<&u8> {
         self.0.get(row)?.get(col)
     }
 }
 impl Default for CollisionArray {
     fn default() -> Self {
         let path = Path::new("./stones/collision.json");
-        let collision_array = if path.exists() {
+        if path.exists() {
             // Load file
             let mut file = File::open(&path).unwrap();
             let mut contents = String::new();
@@ -29,11 +29,10 @@ impl Default for CollisionArray {
             let mut file = File::create(&path).unwrap();
             file.write_all(serde_json::to_string(&collision_array).unwrap().as_bytes()).unwrap();
             collision_array
-        };
-        collision_array
+        }
     }
 }
-pub fn create_collision_array() -> CollisionArray {
+fn create_collision_array() -> CollisionArray {
     let map_width = 1000;
     let map_height = 1000;
     let default_tile = 0;
