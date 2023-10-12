@@ -8,6 +8,7 @@ use bevy_screen_diagnostics::{
     ScreenFrameDiagnosticsPlugin
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use std::{ env, path::Path };
 use crate::*;
 const COLLISION_GRID_Z_INDEX: f32 = 20.0;
 const CROSSHAIR_Z_INDEX: f32 = 999.;
@@ -24,7 +25,7 @@ impl Plugin for DevModePlugin {
                 ScreenDiagnosticsPlugin::default(),
                 ScreenFrameDiagnosticsPlugin
                 ))
-            .add_systems(Startup, dev_mode_convert::convert_assets)
+            .add_systems(Startup, convert_assets)
             .add_systems(
                 OnEnter(start_bundle::AppState::InGame),
                 (spawn_crosshair, spawn_collision_grid)
@@ -85,4 +86,17 @@ pub fn spawn_crosshair(
     )).id();
     camera.followed_entity = Some(crosshair);
     controlled_entity.0 = Some(crosshair);
+}
+pub fn convert_assets() {
+    // 📜 adapt it to other files
+    let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let input_path = Path::new(&manifest_dir).join("whales/icon.png");
+    let output_path = Path::new(&manifest_dir).join("icon.ico");
+    let cache_path = Path::new(&manifest_dir).join("whales/cache.json");
+
+    if !static_convert::cache_check(&input_path, &cache_path) {
+        if static_convert::convert_icon_png_to_ico(&input_path, &output_path) {
+            static_convert::update_cache(&input_path, &cache_path);
+        }
+    }
 }

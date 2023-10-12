@@ -1,9 +1,9 @@
 use bevy::prelude::*;
+use crate::*;
 pub mod collision;
 pub mod time;
 pub mod camera;
 pub mod gamepad;
-pub mod input_map;
 
 pub struct CorePlugin;
 impl Plugin for CorePlugin {
