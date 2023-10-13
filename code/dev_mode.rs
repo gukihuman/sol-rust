@@ -1,41 +1,56 @@
 use bevy::{
     prelude::*,
-    input::common_conditions::input_toggle_active,
-    sprite::MaterialMesh2dBundle
-};
-use bevy_screen_diagnostics::{
-    ScreenDiagnosticsPlugin,
-    ScreenFrameDiagnosticsPlugin
+    sprite::MaterialMesh2dBundle,
+    diagnostic::FrameTimeDiagnosticsPlugin,
+    input::common_conditions::input_toggle_active
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_screen_diagnostics::{
+    Aggregate,
+    ScreenDiagnostics,
+    ScreenDiagnosticsPlugin
+};
 use std::{ env, path::Path };
 use crate::*;
 const COLLISION_GRID_Z_INDEX: f32 = 20.0;
 const CROSSHAIR_Z_INDEX: f32 = 999.;
-const CROSSHAIR_RADIUS: f32 = 10.5;
+const CROSSHAIR_RADIUS: f32 = 2.5;
+const CROSSHAIR_COLOR: Color = Color::rgb(0.69, 0.91, 0.882);
+const DIAGNOSTIC_COLOR: Color = Color::rgb(0.69, 0.91, 0.882);
+fn fps_format(fps: f64) -> String { format!("{:.0}", fps) }
+fn ms_format(ms: f64) -> String { format!("{:.1} /", ms) }
 pub struct DevModePlugin;
 impl Plugin for DevModePlugin {
     fn build(&self, app: &mut App) {
         app
             .add_plugins((
                 WorldInspectorPlugin::default()
-                    .run_if(
-                        input_toggle_active(false, KeyCode::N)
-                    ),
-                ScreenDiagnosticsPlugin::default(),
-                ScreenFrameDiagnosticsPlugin
+                    .run_if(input_toggle_active(false, KeyCode::N)),
                 ))
+            .add_plugins((
+                ScreenDiagnosticsPlugin{
+                    style: Style {
+                        align_self: AlignSelf::FlexEnd,
+                        position_type: PositionType::Absolute,
+                        top: Val::Px(5.0),
+                        right: Val::Px(5.0),
+                        ..default()
+                    },
+                    ..default()
+                },
+                FrameTimeDiagnosticsPlugin,
+            ))
             .add_systems(Startup, convert_assets)
             .add_systems(
-                OnEnter(start_bundle::AppState::InGame),
-                (spawn_crosshair, spawn_collision_grid)
+                OnEnter(core::GameState::InGame),
+                (spawn_crosshair, spawn_collision_grid, spawn_diagnostics)
             )
         ;
     }
 }
 pub fn spawn_collision_grid(
     mut commands: Commands,
-    collision_array: Res<core::collision::CollisionArray>
+    collision_array: Res<collision::CollisionArray>
 ) {
     let square_size = 32.0;
     let gap = 2.0;
@@ -69,7 +84,7 @@ pub fn spawn_crosshair(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut camera: ResMut<core::camera::Camera>,
+    mut camera: ResMut<camera::Camera>,
     mut controlled_entity: ResMut<motion::destination::ControlledEntity>,
 ) {
     let crosshair = commands.spawn((
@@ -77,7 +92,7 @@ pub fn spawn_crosshair(
             mesh: meshes.add(
                 shape::Circle::new(CROSSHAIR_RADIUS).into()
             ).into(),
-            material: materials.add(ColorMaterial::from(Color::ALICE_BLUE)),
+            material: materials.add(ColorMaterial::from(CROSSHAIR_COLOR)),
             transform: Transform::from_translation(Vec3::new(0., 0., CROSSHAIR_Z_INDEX)),
             ..default()
 
@@ -100,3 +115,22 @@ pub fn convert_assets() {
         }
     }
 }
+fn spawn_diagnostics(mut diagnostics: ResMut<ScreenDiagnostics>) {
+    diagnostics
+        .add("fps".to_string(), FrameTimeDiagnosticsPlugin::FPS)
+        .aggregate(Aggregate::MovingAverage(20))
+        .format(fps_format)
+        .diagnostic_color(DIAGNOSTIC_COLOR)
+        .toggle_name();
+    diagnostics
+        .add("ms/frame".to_string(), FrameTimeDiagnosticsPlugin::FRAME_TIME)
+        .aggregate(Aggregate::MovingAverage(20))
+        .format(ms_format)
+        .diagnostic_color(DIAGNOSTIC_COLOR)
+        .toggle_name();
+}
+// 📜 gonna be used when dev screen turned off
+// fn toggle_diagnostics(mut diagnostics: ResMut<ScreenDiagnostics>) {
+//     diagnostics.modify("fps").toggle();
+//     diagnostics.modify("ms/frame").toggle();
+// }

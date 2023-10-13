@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy::input::mouse::MouseWheel;
-use crate::core::gamepad::GamepadState;
+use crate::*;
 const ZOOM: f32 = 0.5;
 const ZOOM_MIN: f32 = 0.5;
 const ZOOM_MAX: f32 = 2.0;
@@ -40,7 +40,7 @@ fn zoom(
     mut camera: ResMut<Camera>,
     mut transforms: Query<&mut Transform>,
     mut mouse_wheel_reader: EventReader<MouseWheel>,
-    gamepad_state: ResMut<GamepadState>,
+    gamepad_state: ResMut<gamepad::GamepadState>,
     time: Res<Time>,
 ) {
     let fps_adjusted_zoom_speed = ZOOM_SPEED * time.delta_seconds();

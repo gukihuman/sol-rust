@@ -1,14 +1,13 @@
 use bevy::prelude::*;
-use crate::core::gamepad::GamepadState;
-use crate::motion::movement::Movement;
+use crate::*;
 
 #[derive(Resource)] pub struct ControlledEntity(pub Option<Entity>);
 impl Default for ControlledEntity { fn default() -> Self { Self (None) } }
 
 pub fn update(
-    gamepad_state: Res<GamepadState>,
+    gamepad_state: Res<gamepad::GamepadState>,
     controlled_entity: Res<ControlledEntity>,
-    mut query: Query<(&Transform, &mut Movement)>,
+    mut query: Query<(&Transform, &mut motion::movement::Movement)>,
 ) {
     if let Some(entity) = controlled_entity.0 {
         if let Ok((transform, mut movement)) = query.get_mut(entity) {
