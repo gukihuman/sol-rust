@@ -8,5 +8,4 @@ pub mod movement;
 pub mod settings;
 pub mod settings_input;
 pub mod start_bundle;
-pub mod static_convert;
 pub mod time;
