@@ -14,14 +14,13 @@ impl Plugin for StartBundlePlugins {
             .insert_resource(collision::CollisionArray::default())
             .add_plugins((
                 motion::MotionPlugin,
-            ))
-            .add_systems(Update, start_game)
-            .add_plugins((
                 camera::CameraPlugin,
-                input_map::InputMapPlugin,
-                diagnostic::DiagnosticPlugin
+                settings_input::SettingsInputPlugin,
+                settings::SettingsPlugin,
+                diagnostics::DiagnosticsPlugin
             ))
             .add_systems(Update, (
+                start_game,
                 gamepad::update_gamepad_state,
             ))
         ;

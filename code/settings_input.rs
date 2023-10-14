@@ -1,31 +1,31 @@
 use bevy::prelude::*;
 use serde::{ Serialize, Deserialize };
 use std::{ fs::File, io::Read, path::Path };
-pub struct InputMapPlugin;
-impl Plugin for InputMapPlugin { fn build(&self, app: &mut App) {
-    app.insert_resource(InputSettings::default());
+pub struct SettingsInputPlugin;
+impl Plugin for SettingsInputPlugin { fn build(&self, app: &mut App) {
+    app.insert_resource(SettingsInput::default());
 }}
-#[derive(Serialize, Deserialize, Resource)] pub struct InputSettings {
+#[derive(Serialize, Deserialize, Resource)] pub struct SettingsInput {
     in_game_keyboard_input: InGameKeyboardInput,
     in_game_mouse_input: InGameMouseInput,
     in_game_gamepad_input: InGameGamepadInput,
     interface_keyboard_input: InterfaceKeyboardInput,
     interface_mouse_input: InterfaceMouseInput,
     interface_gamepad_input: InterfaceGamepadInput
-} impl Default for InputSettings {
+} impl Default for SettingsInput {
     fn default() -> Self {
-        let path = Path::new("./scrolls/input_settings.json");
+        let path = Path::new("./scrolls/settings_input.json");
         if !path.exists() { load_default_input_settings(); }
         let mut contents = String::new();
         File::open(path).unwrap().read_to_string(&mut contents).unwrap();
-        let input_settings: InputSettings =
+        let input_settings: SettingsInput =
             serde_json::from_str(&contents).unwrap();
         input_settings
     }
 }
 pub fn load_default_input_settings() {
-    let input_path = Path::new("./scrolls/input_settings.json");
-    let default_path = Path::new("./stones/default_input_settings.json");
+    let input_path = Path::new("./scrolls/settings_input.json");
+    let default_path = Path::new("./stones/settings_input_default.json");
     std::fs::copy(default_path, input_path)
         .expect("Failed to copy default settings");
 }

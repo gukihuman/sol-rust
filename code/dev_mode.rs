@@ -1,9 +1,7 @@
 use bevy::{
     prelude::*,
     sprite::MaterialMesh2dBundle,
-    input::common_conditions::input_toggle_active
 };
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use std::{ env, path::Path };
 use crate::*;
 const COLLISION_GRID_Z_INDEX: f32 = 20.0;
@@ -14,10 +12,6 @@ pub struct DevModePlugin;
 impl Plugin for DevModePlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_plugins((
-                WorldInspectorPlugin::default()
-                    .run_if(input_toggle_active(false, KeyCode::N)),
-                ))
             .add_systems(Startup, convert_assets)
             .add_systems(
                 OnEnter(core::GameState::InGame),
