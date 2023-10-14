@@ -1,28 +1,26 @@
 use bevy::prelude::*;
-use serde::{Deserialize, Serialize};
-use std::{ collections::HashMap, fs::File, io::Read, path::Path };
+use serde::{ Serialize, Deserialize };
+use std::{ fs::File, io::Read, path::Path };
 pub struct InputMapPlugin;
-impl Plugin for InputMapPlugin {
-    fn build(&self, app: &mut App) {
-        app.insert_resource(InputSettings::default());
-    }
-}
-pub type InputType = HashMap<String, String>;
-#[derive(Deserialize, Serialize, Resource)] pub struct InputSettings {
-    interface_keyboard_input: InputType,
-    interface_mouse_input: InputType,
-    interface_gamepad_input: InputType,
-    in_game_keyboard_input: InputType,
-    in_game_mouse_input: InputType,
-    in_game_gamepad_input: InputType,
-}
-impl Default for InputSettings {
+impl Plugin for InputMapPlugin { fn build(&self, app: &mut App) {
+    app.insert_resource(InputSettings::default());
+}}
+#[derive(Serialize, Deserialize, Resource)] pub struct InputSettings {
+    in_game_keyboard_input: InGameKeyboardInput,
+    in_game_mouse_input: InGameMouseInput,
+    in_game_gamepad_input: InGameGamepadInput,
+    interface_keyboard_input: InterfaceKeyboardInput,
+    interface_mouse_input: InterfaceMouseInput,
+    interface_gamepad_input: InterfaceGamepadInput
+} impl Default for InputSettings {
     fn default() -> Self {
         let path = Path::new("./scrolls/input_settings.json");
         if !path.exists() { load_default_input_settings(); }
         let mut contents = String::new();
         File::open(path).unwrap().read_to_string(&mut contents).unwrap();
-        serde_json::from_str(&contents).unwrap()
+        let input_settings: InputSettings =
+            serde_json::from_str(&contents).unwrap();
+        input_settings
     }
 }
 pub fn load_default_input_settings() {
@@ -30,4 +28,225 @@ pub fn load_default_input_settings() {
     let default_path = Path::new("./stones/default_input_settings.json");
     std::fs::copy(default_path, input_path)
         .expect("Failed to copy default settings");
+}
+#[derive(Serialize, Deserialize)] struct InGameKeyboardInput {
+    decider: MyKeyCode,
+    go: MyKeyCode,
+    cast: MyKeyCode,
+}
+#[derive(Serialize, Deserialize)] struct InGameMouseInput {
+    decider: MyMouseButton,
+}
+#[derive(Serialize, Deserialize)] struct InGameGamepadInput {
+    cast: MyGamepadButtonType,
+}
+#[derive(Serialize, Deserialize)] struct InterfaceKeyboardInput {
+    select: MyKeyCode,
+    up: MyKeyCode,
+    down: MyKeyCode,
+    left: MyKeyCode,
+    right: MyKeyCode,
+}
+#[derive(Serialize, Deserialize)] struct InterfaceMouseInput {
+    select: MyMouseButton,
+}
+#[derive(Serialize, Deserialize)] struct InterfaceGamepadInput {
+    select: MyGamepadButtonType,
+    up: MyGamepadButtonType,
+    down: MyGamepadButtonType,
+    left: MyGamepadButtonType,
+    right: MyGamepadButtonType,
+}
+#[derive(Serialize, Deserialize)] #[repr(u32)] pub enum MyKeyCode {
+    Key1 = 0,
+    Key2 = 1,
+    Key3 = 2,
+    Key4 = 3,
+    Key5 = 4,
+    Key6 = 5,
+    Key7 = 6,
+    Key8 = 7,
+    Key9 = 8,
+    Key0 = 9,
+    A = 10,
+    B = 11,
+    C = 12,
+    D = 13,
+    E = 14,
+    F = 15,
+    G = 16,
+    H = 17,
+    I = 18,
+    J = 19,
+    K = 20,
+    L = 21,
+    M = 22,
+    N = 23,
+    O = 24,
+    P = 25,
+    Q = 26,
+    R = 27,
+    S = 28,
+    T = 29,
+    U = 30,
+    V = 31,
+    W = 32,
+    X = 33,
+    Y = 34,
+    Z = 35,
+    Escape = 36,
+    F1 = 37,
+    F2 = 38,
+    F3 = 39,
+    F4 = 40,
+    F5 = 41,
+    F6 = 42,
+    F7 = 43,
+    F8 = 44,
+    F9 = 45,
+    F10 = 46,
+    F11 = 47,
+    F12 = 48,
+    F13 = 49,
+    F14 = 50,
+    F15 = 51,
+    F16 = 52,
+    F17 = 53,
+    F18 = 54,
+    F19 = 55,
+    F20 = 56,
+    F21 = 57,
+    F22 = 58,
+    F23 = 59,
+    F24 = 60,
+    Snapshot = 61,
+    Scroll = 62,
+    Pause = 63,
+    Insert = 64,
+    Home = 65,
+    Delete = 66,
+    End = 67,
+    PageDown = 68,
+    PageUp = 69,
+    Left = 70,
+    Up = 71,
+    Right = 72,
+    Down = 73,
+    Back = 74,
+    Return = 75,
+    Space = 76,
+    Compose = 77,
+    Caret = 78,
+    Numlock = 79,
+    Numpad0 = 80,
+    Numpad1 = 81,
+    Numpad2 = 82,
+    Numpad3 = 83,
+    Numpad4 = 84,
+    Numpad5 = 85,
+    Numpad6 = 86,
+    Numpad7 = 87,
+    Numpad8 = 88,
+    Numpad9 = 89,
+    AbntC1 = 90,
+    AbntC2 = 91,
+    NumpadAdd = 92,
+    Apostrophe = 93,
+    Apps = 94,
+    Asterisk = 95,
+    Plus = 96,
+    At = 97,
+    Ax = 98,
+    Backslash = 99,
+    Calculator = 100,
+    Capital = 101,
+    Colon = 102,
+    Comma = 103,
+    Convert = 104,
+    NumpadDecimal = 105,
+    NumpadDivide = 106,
+    Equals = 107,
+    Grave = 108,
+    Kana = 109,
+    Kanji = 110,
+    AltLeft = 111,
+    BracketLeft = 112,
+    ControlLeft = 113,
+    ShiftLeft = 114,
+    SuperLeft = 115,
+    Mail = 116,
+    MediaSelect = 117,
+    MediaStop = 118,
+    Minus = 119,
+    NumpadMultiply = 120,
+    Mute = 121,
+    MyComputer = 122,
+    NavigateForward = 123,
+    NavigateBackward = 124,
+    NextTrack = 125,
+    NoConvert = 126,
+    NumpadComma = 127,
+    NumpadEnter = 128,
+    NumpadEquals = 129,
+    Oem102 = 130,
+    Period = 131,
+    PlayPause = 132,
+    Power = 133,
+    PrevTrack = 134,
+    AltRight = 135,
+    BracketRight = 136,
+    ControlRight = 137,
+    ShiftRight = 138,
+    SuperRight = 139,
+    Semicolon = 140,
+    Slash = 141,
+    Sleep = 142,
+    Stop = 143,
+    NumpadSubtract = 144,
+    Sysrq = 145,
+    Tab = 146,
+    Underline = 147,
+    Unlabeled = 148,
+    VolumeDown = 149,
+    VolumeUp = 150,
+    Wake = 151,
+    WebBack = 152,
+    WebFavorites = 153,
+    WebForward = 154,
+    WebHome = 155,
+    WebRefresh = 156,
+    WebSearch = 157,
+    WebStop = 158,
+    Yen = 159,
+    Copy = 160,
+    Paste = 161,
+    Cut = 162,
+}
+#[derive(Serialize, Deserialize)] pub enum MyGamepadButtonType {
+    South,
+    East,
+    North,
+    West,
+    C,
+    Z,
+    LeftTrigger,
+    LeftTrigger2,
+    RightTrigger,
+    RightTrigger2,
+    Select,
+    Start,
+    Mode,
+    LeftThumb,
+    RightThumb,
+    DPadUp,
+    DPadDown,
+    DPadLeft,
+    DPadRight,
+    Other(u8),
+}
+#[derive(Serialize, Deserialize)] pub enum MyMouseButton {
+    Left,
+    Right,
+    Middle,
+    Other(u16),
 }

@@ -1,30 +1,30 @@
 {
   "in_game_keyboard_input": {
-    "Decider": "F",
-    "Move": "V",
-    "Cast": "J"
+    "decider": "F",
+    "go": "V",
+    "cast": "J"
   },
   "in_game_mouse_input": {
-    "Decider": "LeftClick"
+    "decider": "Left"
   },
   "in_game_gamepad_input": {
-    "Cast": "North"
+    "cast": "North"
   },
   "interface_keyboard_input": {
-    "Select": "Enter",
-    "Up": "Up",
-    "Down": "Down",
-    "Left": "Left",
-    "Right": "Right"
+    "select": "Return",
+    "up": "Up",
+    "down": "Down",
+    "left": "Left",
+    "right": "Right"
   },
   "interface_mouse_input": {
-    "Select": "LeftClick"
+    "select": "Left"
   },
   "interface_gamepad_input": {
-    "Select": "North",
-    "Up": "Up",
-    "Down": "Down",
-    "Left": "Left",
-    "Right": "Right"
+    "select": "North",
+    "up": "DPadUp",
+    "down": "DPadDown",
+    "left": "DPadLeft",
+    "right": "DPadRight"
   }
 }
