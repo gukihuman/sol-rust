@@ -15,11 +15,11 @@ impl Plugin for StartBundlePlugins {
             .add_plugins((
                 motion::MotionPlugin,
             ))
-            .add_systems(Update, gamepad::update_gamepad_state)
             .add_systems(Update, start_game)
             .add_plugins((
                 camera::CameraPlugin,
-                input_map::InputMapPlugin
+                input_map::InputMapPlugin,
+                diagnostic::DiagnosticPlugin
             ))
             .add_systems(Update, (
                 gamepad::update_gamepad_state,

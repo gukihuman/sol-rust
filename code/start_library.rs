@@ -2,6 +2,7 @@ pub mod camera;
 pub mod collision;
 pub mod core;
 pub mod dev_mode;
+pub mod diagnostic;
 pub mod gamepad;
 pub mod input_map;
 pub mod motion;

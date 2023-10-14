@@ -1,24 +1,15 @@
 use bevy::{
     prelude::*,
     sprite::MaterialMesh2dBundle,
-    diagnostic::FrameTimeDiagnosticsPlugin,
     input::common_conditions::input_toggle_active
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
-use bevy_screen_diagnostics::{
-    Aggregate,
-    ScreenDiagnostics,
-    ScreenDiagnosticsPlugin
-};
 use std::{ env, path::Path };
 use crate::*;
 const COLLISION_GRID_Z_INDEX: f32 = 20.0;
 const CROSSHAIR_Z_INDEX: f32 = 999.;
 const CROSSHAIR_RADIUS: f32 = 2.5;
 const CROSSHAIR_COLOR: Color = Color::rgb(0.69, 0.91, 0.882);
-const DIAGNOSTIC_COLOR: Color = Color::rgb(0.69, 0.91, 0.882);
-fn fps_format(fps: f64) -> String { format!("{:.0}", fps) }
-fn ms_format(ms: f64) -> String { format!("{:.1} /", ms) }
 pub struct DevModePlugin;
 impl Plugin for DevModePlugin {
     fn build(&self, app: &mut App) {
@@ -27,23 +18,10 @@ impl Plugin for DevModePlugin {
                 WorldInspectorPlugin::default()
                     .run_if(input_toggle_active(false, KeyCode::N)),
                 ))
-            .add_plugins((
-                ScreenDiagnosticsPlugin{
-                    style: Style {
-                        align_self: AlignSelf::FlexEnd,
-                        position_type: PositionType::Absolute,
-                        top: Val::Px(5.0),
-                        right: Val::Px(5.0),
-                        ..default()
-                    },
-                    ..default()
-                },
-                FrameTimeDiagnosticsPlugin,
-            ))
             .add_systems(Startup, convert_assets)
             .add_systems(
                 OnEnter(core::GameState::InGame),
-                (spawn_crosshair, spawn_collision_grid, spawn_diagnostics)
+                (spawn_crosshair, spawn_collision_grid)
             )
         ;
     }
@@ -115,22 +93,3 @@ pub fn convert_assets() {
         }
     }
 }
-fn spawn_diagnostics(mut diagnostics: ResMut<ScreenDiagnostics>) {
-    diagnostics
-        .add("fps".to_string(), FrameTimeDiagnosticsPlugin::FPS)
-        .aggregate(Aggregate::MovingAverage(20))
-        .format(fps_format)
-        .diagnostic_color(DIAGNOSTIC_COLOR)
-        .toggle_name();
-    diagnostics
-        .add("ms/frame".to_string(), FrameTimeDiagnosticsPlugin::FRAME_TIME)
-        .aggregate(Aggregate::MovingAverage(20))
-        .format(ms_format)
-        .diagnostic_color(DIAGNOSTIC_COLOR)
-        .toggle_name();
-}
-// 📜 gonna be used when dev screen turned off
-// fn toggle_diagnostics(mut diagnostics: ResMut<ScreenDiagnostics>) {
-//     diagnostics.modify("fps").toggle();
-//     diagnostics.modify("ms/frame").toggle();
-// }
