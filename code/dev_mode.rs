@@ -57,7 +57,7 @@ pub fn spawn_crosshair(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut camera: ResMut<camera::Camera>,
-    mut controlled_entity: ResMut<motion::destination::ControlledEntity>,
+    mut controlled_entity: ResMut<movement::ControlledEntity>,
 ) {
     let crosshair = commands.spawn((
         MaterialMesh2dBundle {
@@ -69,7 +69,7 @@ pub fn spawn_crosshair(
             ..default()
 
         },
-        motion::movement::Movement::default(),
+        movement::Movement::default(),
     )).id();
     camera.followed_entity = Some(crosshair);
     controlled_entity.0 = Some(crosshair);

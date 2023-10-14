@@ -16,6 +16,7 @@ impl Plugin for SettingsInputPlugin { fn build(&self, app: &mut App) {
     fn default() -> Self {
         let path = Path::new("./scrolls/settings_input.json");
         if !path.exists() { load_default_input_settings(); }
+        #[cfg(debug_assertions)] load_default_input_settings();
         let mut contents = String::new();
         File::open(path).unwrap().read_to_string(&mut contents).unwrap();
         let input_settings: SettingsInput =

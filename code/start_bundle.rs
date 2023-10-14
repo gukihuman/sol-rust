@@ -5,19 +5,15 @@ impl Plugin for StartBundlePlugins {
     fn build(&self, app: &mut bevy::prelude::App) {
         app
             .add_state::<core::GameState>()
-            .insert_resource(time::WorldTime::default())
-            .insert_resource(gamepad::GamepadState::default())
-            .insert_resource(
-                motion::destination::ControlledEntity::default()
-            )
-            .insert_resource(motion::indicator::IndicatorEntity::default())
-            .insert_resource(collision::CollisionArray::default())
+            .init_resource::<time::WorldTime>()
+            .init_resource::<collision::CollisionArray>()
             .add_plugins((
-                motion::MotionPlugin,
+                movement::MotionPlugin,
                 camera::CameraPlugin,
                 settings_input::SettingsInputPlugin,
                 settings::SettingsPlugin,
-                diagnostics::DiagnosticsPlugin
+                diagnostics::DiagnosticsPlugin,
+                gamepad::GamepadPlugin
             ))
             .add_systems(Update, (
                 start_game,
