@@ -63,7 +63,6 @@ pub fn spawn_crosshair(
             material: materials.add(ColorMaterial::from(CROSSHAIR_COLOR)),
             transform: Transform::from_translation(Vec3::new(0., 0., CROSSHAIR_Z_INDEX)),
             ..default()
-
         },
         movement::Movement::default(),
     )).id();
@@ -76,7 +75,6 @@ pub fn convert_assets() {
     let input_path = Path::new(&manifest_dir).join("whales/icon.png");
     let output_path = Path::new(&manifest_dir).join("icon.ico");
     let cache_path = Path::new(&manifest_dir).join("whales/cache.json");
-
     if !convert_cache_check(&input_path, &cache_path) {
         if convert_icon_png_to_ico(&input_path, &output_path) {
             convert_cache_update(&input_path, &cache_path);
@@ -89,16 +87,12 @@ pub fn convert_icon_png_to_ico(src_path: &Path, dst_path: &Path) -> bool {
     let icon_img = create_icon_image(img);
     let icon_dir_entry = IconDirEntry::encode(&icon_img)
         .expect("Failed to encode to IconDirEntry");
-
     let mut icon_dir = IconDir::new(ResourceType::Icon);
     icon_dir.add_entry(icon_dir_entry);
-
     let file = File::create(&dst_path)
         .expect("Failed to create output file");
     let mut writer = BufWriter::new(file);
-
     icon_dir.write(&mut writer).expect("Failed to write icon");
-
     true
 }
 fn create_icon_image(
@@ -114,7 +108,6 @@ pub fn convert_cache_check(src_path: &Path, cache_path: &Path)-> bool {
     let mut src = File::open(&src_path).expect("Failed to open icon.png");
     let _ = io::copy(&mut src, &mut hasher);
     let current_hash = format!("{:x}", hasher.finalize());
-
     let cache: Value = serde_json::from_str(
         &fs::read_to_string(&cache_path).unwrap_or("{}".into())
     ).unwrap();
@@ -130,7 +123,6 @@ pub fn convert_cache_update(src_path: &Path, cache_path: &Path) {
     let mut src = File::open(&src_path).expect("Failed to open icon.png");
     let _ = io::copy(&mut src, &mut hasher);
     let current_hash = format!("{:x}", hasher.finalize());
-
     let new_cache = json!({ "hash": current_hash });
     fs::write(&cache_path, new_cache.to_string())
         .expect("Failed to write cache file");

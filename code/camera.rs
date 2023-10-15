@@ -13,7 +13,7 @@ const ZOOM_SPEED: f32 = 1.0;
 pub struct CameraPlugin;
 impl Plugin for CameraPlugin { fn build(&self, app: &mut App) { app
     .add_systems(Startup, spawn_camera)
-    .add_systems(Update, (zoom, follow))
+    .add_systems(Update, (zoom, follow.after(movement::update_position)))
 ;}}
 pub fn spawn_camera (mut commands: Commands) {
     let camera = commands.spawn(Camera2dBundle {
@@ -39,11 +39,11 @@ fn zoom(
     gamepad_state: ResMut<gamepad::GamepadState>,
     time: Res<Time>,
 ) {
-    let fps_adjusted_zoom_speed = ZOOM_SPEED * time.delta_seconds();
+    let adjusted_zoom_speed = ZOOM_SPEED * time.delta_seconds();
     for event in mouse_wheel_reader.iter() {
-        camera.zoom *= 1.0 - event.y * 2.0 * fps_adjusted_zoom_speed;
+        camera.zoom *= 1.0 - event.y * 2.0 * adjusted_zoom_speed;
     }
-    camera.zoom *= 1.0 - gamepad_state.right_stick_y * fps_adjusted_zoom_speed;
+    camera.zoom *= 1.0 - gamepad_state.right_stick_y * adjusted_zoom_speed;
     camera.zoom = camera.zoom.clamp(ZOOM_MIN, ZOOM_MAX);
     if let Ok(mut transform) = transforms.get_mut(camera.entity) {
         transform.scale.x = camera.zoom;
