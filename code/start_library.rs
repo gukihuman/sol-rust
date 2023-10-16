@@ -4,6 +4,7 @@ pub mod core;
 pub mod dev_mode;
 pub mod diagnostics;
 pub mod gamepad;
+pub mod main_menu;
 pub mod movement;
 pub mod settings;
 pub mod settings_input;

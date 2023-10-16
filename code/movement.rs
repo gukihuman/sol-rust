@@ -81,6 +81,7 @@ fn calculate_velocity(
     delta_seconds: f32
 ) -> Vec2 {
     let delta_inertia = delta_seconds / movement.inertia_ratio;
+    // 📜 unpack a bit :)
     movement.velocity * (1.0 - delta_inertia) + movement.velocity_desire * delta_inertia
 }
 fn draw_gizmos(

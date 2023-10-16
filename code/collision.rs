@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::{Write, Read};
 use std::path::Path;
 use serde::{Deserialize, Serialize};
+// 📜 change arrray :)
 #[derive(Deserialize, Serialize, Resource)]
 pub struct CollisionArray(Vec<Vec<u8>>);
 impl CollisionArray {
